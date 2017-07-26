@@ -1,0 +1,93 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.atm.spring.activiti.dao.LeaveDao">
+
+	<insert id="insertLeave" parameterType="leaveModel" >
+		INSERT INTO t_leave
+		(
+		id,
+		apply_time,
+		end_time,
+		leave_type,
+		reality_end_time,
+		reality_start_time,
+		reason,
+		start_time,
+		user_id)
+		VALUES
+		(
+		#{id},
+		#{applyTime},
+		#{endTime},
+		#{leaveType},
+		#{realityEndTime},
+		#{realityStartTime},
+		#{reason},
+		#{startTime},
+		#{userId}
+		)
+	</insert>
+
+	<select id="getLeaveListByIds" resultType="leaveModel">
+		SELECT 	t1.id,
+                t1.apply_time,
+				t1.end_time,
+				t1.leave_type,
+				t1.reality_end_time,
+				t1.reality_start_time,
+				t1.reason,
+				t1.start_time,
+				t1.user_id
+		FROM t_leave t1
+		INNER JOIN (
+		<foreach item="item" index="index" collection="list" separator="union all">
+			SELECT #{item} id, ${index} sortIndex
+		</foreach>
+		) t2 ON t1.id = t2.id
+		ORDER BY t2.sortIndex
+	</select>
+
+	<select id="getLeaveById" resultType="leaveModel">
+		SELECT 	t1.id,
+				t1.apply_time,
+				t1.end_time,
+				t1.leave_type,
+				t1.reality_end_time,
+				t1.reality_start_time,
+				t1.reason,
+				t1.start_time,
+				t1.user_id
+		 FROM t_leave t1
+		WHERE t1.id = #{id}
+	</select>
+
+	<update id="updateLeave" parameterType="leaveModel">
+		UPDATE t_leave
+		<set>
+			<if test="applyTime != null">
+				apply_time = #{applyTime},
+			</if>
+			<if test="endTime != null">
+				end_time = #{endTime},
+			</if>
+			<if test="leaveType != null and leaveType != ''">
+				leave_type = #{leaveType},
+			</if>
+			<if test="realityEndTime != null">
+				reality_end_time = #{realityEndTime},
+			</if>
+			<if test="realityStartTime != null">
+				reality_start_time = #{realityStartTime},
+			</if>
+			<if test="reason != null and reason != ''">
+				reason = #{reason},
+			</if>
+			<if test="startTime != null">
+				start_time = #{startTime},
+			</if>
+			<if test="userId != null and userId != ''">
+				user_id = #{userId},
+			</if>
+		</set>
+		WHERE id = #{id}
+	</update>
+</mapper>

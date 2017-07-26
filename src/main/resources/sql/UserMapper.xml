@@ -1,0 +1,22 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.atm.spring.activiti.dao.UserDao">
+
+	<select id="getAllUserList" resultType="userModel">
+		SELECT user_id userId,
+			   user_name userName,
+			   password
+		  FROM m_user
+	</select>
+
+	<select id="findUserById" resultType="userModel">
+		SELECT user_id userId,
+				user_name userName,
+				password
+		FROM m_user
+		WHERE user_id = #{userId}
+	</select>
+
+	<insert id="insertUser" parameterType="userModel" >
+		INSERT INTO m_user(user_id,user_name,password) VALUES(#{userId},#{userName},#{password})
+	</insert>
+</mapper>
